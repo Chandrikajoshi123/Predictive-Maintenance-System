@@ -25,9 +25,15 @@ All deployed in a production-grade stack (FastAPI + Streamlit + Docker + Cloud).
 | GPT-4 Maintenance Reports | Generates human-readable insights from raw predictions                     |
 | Dockerized & Cloud-ready  | Easy to deploy on Render, GCP, AWS, or Docker Desktop                        |
 
+
+
+
+
+
 ## Contact & Credits
 
 Built with ❤️ to demonstrate intelligent aircraft monitoring systems. Inspired by Rolls-Royce's "IntelligentEngine" vision.
+
 
 - Project by: Chandrika Joshi
 - GitHub: 
