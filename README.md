@@ -26,6 +26,7 @@ All deployed in a production-grade stack (FastAPI + Streamlit + Docker + Cloud).
 | Dockerized & Cloud-ready  | Easy to deploy on Render, GCP, AWS, or Docker Desktop                        |
 
 
+<img width="2088" height="913" alt="image" src="https://github.com/user-attachments/assets/0bc4453c-449d-487c-bb72-0b2a916849de" />
 
 
 
