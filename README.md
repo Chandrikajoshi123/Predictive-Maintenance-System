@@ -13,6 +13,18 @@ This platform simulates an intelligent aircraft engine environment:
 - Offers real-time dashboards for engineers and managers
 
 All deployed in a production-grade stack (FastAPI + Streamlit + Docker + Cloud).
+
+##  Key Features
+
+| Feature                      | Description                                                                 |
+|-----------------------------|-----------------------------------------------------------------------------|
+|  RUL Prediction            | Predicts Remaining Useful Life using NASA CMAPSS sensor data                |
+|  FastAPI Backend           | RESTful API for serving RUL predictions                                     |
+|  Streamlit Dashboard       | Real-time dashboard with sensor visualizations + decision outcomes         |
+| LangChain Agent           | Makes autonomous decisions based on RUL and sensor health                   |
+| GPT-4 Maintenance Reports | Generates human-readable insights from raw predictions                     |
+| Dockerized & Cloud-ready  | Easy to deploy on Render, GCP, AWS, or Docker Desktop                        |
+
 ## Contact & Credits
 
 Built with ❤️ to demonstrate intelligent aircraft monitoring systems. Inspired by Rolls-Royce's "IntelligentEngine" vision.
