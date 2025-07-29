@@ -13,3 +13,10 @@ This platform simulates an intelligent aircraft engine environment:
 - Offers real-time dashboards for engineers and managers
 
 All deployed in a production-grade stack (FastAPI + Streamlit + Docker + Cloud).
+## Contact & Credits
+
+Built with ❤️ to demonstrate intelligent aircraft monitoring systems. Inspired by Rolls-Royce's "IntelligentEngine" vision.
+
+- Project by: Chandrika Joshi
+- GitHub: 
+
