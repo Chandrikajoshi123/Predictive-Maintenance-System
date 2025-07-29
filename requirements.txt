@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+joblib
+scikit-learn
+pandas
+streamlit
+openai
+langchain

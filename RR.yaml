@@ -3,6 +3,6 @@
 The AI agent analyzes sensor input and RUL prediction:
 
 ```python
-agent.run({"sensor_data": [...], "rul": 18.5})```
+agent.run({"sensor_data": [...], "rul": 18.5})
 
 ## → “RUL is low. Recommend urgent inspection.”
