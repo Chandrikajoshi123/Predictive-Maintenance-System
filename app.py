@@ -91,9 +91,11 @@ seed = st.sidebar.number_input("Random seed", 0, 9999, 42)
 np.random.seed(seed)
 
 st.sidebar.markdown("---")
-openai_key = st.sidebar.text_input("OpenAI API key (optional)", type="password")
+openai_key = st.sidebar.text_input("OpenAI API key", type="password")
 st.sidebar.markdown("---")
 st.sidebar.markdown("**Export**: Download current data or report")
+st.sidebar.markdown("---")
+
 
 # --- Top row: Overview cards ---
 col1, col2, col3, col4 = st.columns([2,1,1,1])
@@ -116,8 +118,33 @@ with col4:
     st.metric("Anomalies detected", "—", delta=None)
 
 st.markdown("---")
+'''@st.cache_data
+def load_cmapss_data():
+    df = pd.read_csv('CMaps/train_FD001.txt', sep=' ', header=None)
+    df = df.dropna(axis=1, how='all')
+    df.columns = ['engine_id', 'cycle'] + [f'sensor_{i}' for i in range(1, df.shape[1]-1)]
+    return df
+DATA = load_cmapss_data()
 
+'''
 # --- Simulate sensor / CMAPSS-like data ---
+# --- Dataset Loading ---
+st.sidebar.markdown("### Dataset Selection")
+use_real_data = st.sidebar.radio("Choose dataset type:", ["Synthetic (Demo)", "CMAPSS (Real)"])
+
+@st.cache_data
+def load_cmapss_data(path="/Users/chandrikajoshi/Downloads/CMaps/RUL_FD001.txt"):
+    if not os.path.exists(path):
+        st.error(f" CMAPSS dataset not found at {path}")
+        st.stop()
+    df = pd.read_csv(path, sep=" ", header=None)
+    df = df.dropna(axis=1, how="all")
+    df.columns = ['engine_id', 'cycle'] + [f'sensor_{i}' for i in range(1, df.shape[1]-1)]
+    # For compatibility with demo logic, add RUL_true placeholder
+    df['RUL_true'] = df.groupby('engine_id')['cycle'].transform(lambda x: x.max() - x)
+    df['engine_id'] = df['engine_id'].astype(str)
+    return df
+import base64, os
 @st.cache_data
 def generate_synthetic_cmapss(n_engines=12, seq_len=200):
     # Each engine has multiple sensors; this is simplified/synthetic
@@ -127,18 +154,22 @@ def generate_synthetic_cmapss(n_engines=12, seq_len=200):
         life = np.linspace(1.0, 0.0, seq_len)
         for t in range(seq_len):
             sensors = baseline + np.random.normal(0, 0.02, size=(6,)) + (1 - life[t]) * np.random.uniform(0, 0.5, size=(6,))
-            row = {
-                'engine_id': f'E{eid:03d}',
-                'cycle': t+1,
-                'RUL_true': seq_len - t,
-            }
+            row = {'engine_id': f'E{eid:03d}', 'cycle': t+1, 'RUL_true': seq_len - t}
             for i, s in enumerate(sensors, start=1):
                 row[f'sensor_{i}'] = float(s)
             engines.append(row)
     return pd.DataFrame(engines)
 
+if use_real_data == "CMAPSS (Real)":
+    DATA = load_cmapss_data()
+else:
+    DATA = generate_synthetic_cmapss(n_engines=8, seq_len=220)
+
+
 # create dataset
-DATA = generate_synthetic_cmapss(n_engines=8, seq_len=220)
+#DATA = generate_synthetic_cmapss(n_engines=8, seq_len=220)
+#df = pd.read_csv('/Users/chandrikajoshi/Downloads/CMaps/train_FD001.txt', sep=' ', header=None)
+
 
 # --- Build a fast demo RUL model (trained on synthetic env) ---
 @st.cache_data
@@ -210,7 +241,27 @@ with colA:
     st.markdown(f"**True RUL (sim):** {int(latest['RUL_true'])} cycles")
 
     # small futuristic image
-    st.markdown("<div style='text-align:center'><img src='RRimg.jpg' width=220 style='border-radius:8px;box-shadow:0 8px 28px rgba(0,0,0,0.6)'></div>", unsafe_allow_html=True)
+    import base64
+
+def get_base64_image(image_path):
+    with open(image_path, "rb") as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+image_base64 = get_base64_image("RRimg.jpg")
+
+st.markdown(
+    f"""
+    <div style='text-align:center'>
+        <img src="data:image/jpeg;base64,{image_base64}" 
+             width="220" 
+             style="border-radius:8px;box-shadow:0 8px 28px rgba(0,0,0,0.6)">
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+   # st.markdown("<div style='text-align:center'><img src='/Users/chandrikajoshi/Documents/GitHub/Predictive-Maintenance-System/RRimg.jpg' width=220 style='border-radius:8px;box-shadow:0 8px 28px rgba(0,0,0,0.6)'></div>", unsafe_allow_html=True)
 
 with colB:
     st.subheader("Predicted RUL & Agent Actions")
@@ -238,7 +289,7 @@ with left:
     st.altair_chart(chart, use_container_width=True)
 
 with right:
-    st.subheader('RUL Forecast (toy)')
+    st.subheader('RUL Forecast')
     # toy forecast line: predicted declines linearly from current pred to 0
     cycles = np.arange(int(latest['cycle']), int(latest['cycle']) + int(rul_pred) + 1)
     forecast_rul = np.linspace(rul_pred, 0, len(cycles))
