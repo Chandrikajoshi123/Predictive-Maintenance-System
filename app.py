@@ -11,14 +11,14 @@ Description:
     pip install -r requirements.txt
     streamlit run Rolls-Royce_DigitalTwin_Streamlit_App.py
 
-Requirements (example):
+Requirements:
 streamlit
 pandas
 numpy
 scikit-learn
 altair
 plotly
-openai  # optional for GPT report
+openai  
 pillow
 """
 
@@ -210,7 +210,7 @@ with colA:
     st.markdown(f"**True RUL (sim):** {int(latest['RUL_true'])} cycles")
 
     # small futuristic image
-    st.markdown("<div style='text-align:center'><img src='https://images.unsplash.com/photo-1502877338535-766e1452684a?w=1200&q=80' width=220 style='border-radius:8px;box-shadow:0 8px 28px rgba(0,0,0,0.6)'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align:center'><img src='RRimg.jpg' width=220 style='border-radius:8px;box-shadow:0 8px 28px rgba(0,0,0,0.6)'></div>", unsafe_allow_html=True)
 
 with colB:
     st.subheader("Predicted RUL & Agent Actions")
